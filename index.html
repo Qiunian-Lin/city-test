@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kindle 信息与选购平台</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="site-shell">
+    <header class="navbar">
+      <span class="brand">Kindle Atlas</span>
+      <nav class="nav-links" aria-label="主导航">
+        <a class="nav-link" data-target="heroSection">首页</a>
+        <a class="nav-link" data-target="databaseSection">型号数据库</a>
+        <a class="nav-link" data-target="pricingSection">价格选购</a>
+        <a class="nav-link" data-target="tipsSection">使用技巧</a>
+        <a class="nav-link" data-target="assistantSection">智能助手</a>
+        <a class="nav-link" data-target="communitySection">社区经验</a>
+      </nav>
+    </header>
+
+    <main>
+      <section id="heroSection" class="module active">
+        <div class="hero">
+          <div>
+            <p class="badge">官方数据 + 用户实测</p>
+            <h1>Kindle 信息与选购平台</h1>
+            <p>整合型号库、预算筛选、价格摘要与使用技巧。点击导航切换模块即可深入了解每个视图。</p>
+            <div class="hero-actions">
+              <button class="btn-primary" data-action="focusDatabase">快速筛选型号</button>
+              <button class="btn-secondary" data-action="focusAssistant">问智能助手</button>
+            </div>
+          </div>
+          <div class="section">
+            <h2>选购速览</h2>
+            <div class="price-grid" id="heroPriceCards"></div>
+          </div>
+        </div>
+        <div class="section">
+          <h2>核心型号速览</h2>
+          <div class="card-grid model-grid" id="heroModels"></div>
+          <div class="quick-actions" id="quickActions"></div>
+        </div>
+      </section>
+
+      <section id="databaseSection" class="module section">
+        <h2>型号数据库</h2>
+        <p>按预算、用途、功能筛选 Kindle，底部表格展示每项核心参数与优劣势。</p>
+        <div class="filters" id="filterControls"></div>
+        <div class="feature-toggle" id="featureToggles"></div>
+        <div class="card-grid" id="databaseHighlights"></div>
+        <table class="model-table" id="modelTable">
+          <thead>
+            <tr>
+              <th>型号</th>
+              <th>屏幕 / 功能</th>
+              <th>存储</th>
+              <th>价格区间</th>
+              <th>适合人群</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="card" id="modelDetail">
+          <h3>型号详情</h3>
+          <div id="modelDetailContent" class="detail-grid">
+            <p>点击上方表格或卡片选择型号，可在这里查看详细参数。</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="pricingSection" class="module section">
+        <h2>价格与选购摘要</h2>
+        <p>根据预算与用途划分的推荐区，结合常见折扣与功能，看清各价位可得的模型。</p>
+        <div class="price-grid" id="pricingCards"></div>
+      </section>
+
+      <section id="tipsSection" class="module section">
+        <h2>使用技巧与配置建议</h2>
+        <div class="card-grid" id="tipsList"></div>
+      </section>
+
+      <section id="assistantSection" class="module section">
+        <h2>智能助手</h2>
+        <p>输入你的预算、用途或具体诉求，助手会基于型号库推荐符合的 Kindle。</p>
+        <div class="assistant-panel">
+          <div>
+            <textarea id="assistantInput" placeholder="例如：预算 300 元想要带背光和手写的 Kindle"></textarea>
+            <button id="assistantSubmit">获取推荐</button>
+          </div>
+          <div class="chat-output" id="assistantOutput">
+            <div class="chat-bubble">请输入问题，助手会根据当前数据给出合理的推荐。</div>
+          </div>
+        </div>
+        <p class="muted">示例问题：预算 300；我要背光；哪款适合笔记；想看小说最舒适。</p>
+      </section>
+
+      <section id="communitySection" class="module section">
+        <h2>社区经验（辅助参考）</h2>
+        <div class="card-grid community-grid" id="communityList"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      数据源：Amazon 官方规格 + 用户反馈，仅供参考。实际购买请以平台价格与物流为准。
+    </footer>
+  </div>
+
+  <script src="js/app.js" defer></script>
+</body>
+</html>
