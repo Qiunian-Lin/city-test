@@ -642,7 +642,7 @@ const dimensionLabels = {
   stability: "稳定安全感",
 };
 
-function toTenScale(avg) {
+function toTenScale(avg: number) {
   return Number((1 + ((avg - 1) / 4) * 9).toFixed(1));
 }
 
