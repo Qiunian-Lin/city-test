@@ -306,22 +306,22 @@ export default function CityQuizPage() {
 
   if (!started) {
     return (
-      <main className="min-h-screen bg-[#F3F2F6] text-[#1E1D24]">
+      <main className="min-h-screen bg-[#F8F7FB] text-[#201D2A]">
         <div className="mx-auto flex min-h-screen max-w-6xl items-center px-6 py-10 md:py-14">
-          <div className="grid w-full gap-8 rounded-[32px] border border-[#DFDCE5] bg-white p-8 shadow-[0_10px_30px_rgba(40,36,52,0.05)] md:grid-cols-2 md:p-12">
+          <div className="grid w-full gap-8 rounded-[32px] border border-[#E8E2F2] bg-white p-8 shadow-[0_10px_30px_rgba(80,70,120,0.05)] md:grid-cols-2 md:p-12">
             <div className="flex flex-col justify-between">
               <div>
-                <span className="inline-flex rounded-full bg-[#E8E5EE] px-4 py-1.5 text-sm text-[#5F5A6B]">
+                <span className="inline-flex rounded-full bg-[#F1ECFA] px-4 py-1.5 text-sm text-[#7567A8]">
                   城市气质测试
                 </span>
 
-                <h1 className="mt-6 text-[40px] font-semibold leading-tight text-[#1E1D24] md:text-[56px]">
+                <h1 className="mt-6 text-[40px] font-semibold leading-tight text-[#201D2A] md:text-[56px]">
                   哪座城市
                   <br />
                   适合你生活？
                 </h1>
 
-                <p className="mt-6 max-w-xl text-base leading-8 text-[#706C78] md:text-lg">
+                <p className="mt-6 max-w-xl text-base leading-8 text-[#746F82] md:text-lg">
                   通过一组关于节奏、稳定感、社交与自由偏好的问题，
                   找到更接近你生活方式的城市气质。
                 </p>
@@ -330,11 +330,11 @@ export default function CityQuizPage() {
               <div className="mt-10 flex flex-wrap gap-3">
                 <button
                   onClick={() => setStarted(true)}
-                  className="rounded-2xl bg-[#6A6675] px-6 py-4 text-sm font-medium text-white transition-all duration-200 hover:bg-[#5A5664]"
+                  className="rounded-2xl bg-[#7C6DB0] px-6 py-4 text-sm font-medium text-white transition-all duration-200 hover:bg-[#6E5FA2]"
                 >
                   开始测试
                 </button>
-                <div className="rounded-2xl border border-[#DFDCE5] bg-white px-6 py-4 text-sm text-[#5F5A6B]">
+                <div className="rounded-2xl border border-[#E8E2F2] bg-white px-6 py-4 text-sm text-[#7567A8]">
                   20 道题 · 约 2–3 分钟
                 </div>
               </div>
@@ -344,11 +344,11 @@ export default function CityQuizPage() {
               {cities.slice(0, 6).map((city) => (
                 <div
                   key={city.name}
-                  className="rounded-3xl border border-[#DFDCE5] bg-[#FAFAFB] p-5 transition-all duration-200 hover:-translate-y-0.5"
+                  className="rounded-3xl border border-[#E8E2F2] bg-[#FCFBFE] p-5 transition-all duration-200 hover:-translate-y-0.5"
                 >
-                  <div className="text-lg font-medium text-[#1E1D24]">{city.name}</div>
-                  <div className="mt-1 text-sm text-[#8A8493]">{city.country}</div>
-                  <div className="mt-4 text-sm leading-6 text-[#706C78]">{city.tagline}</div>
+                  <div className="text-lg font-medium text-[#201D2A]">{city.name}</div>
+                  <div className="mt-1 text-sm text-[#938CAB]">{city.country}</div>
+                  <div className="mt-4 text-sm leading-6 text-[#746F82]">{city.tagline}</div>
                 </div>
               ))}
             </div>
@@ -362,56 +362,56 @@ export default function CityQuizPage() {
     const mainCity = results.top3[0];
 
     return (
-      <main className="min-h-screen bg-[#F3F2F6] text-[#1E1D24]">
+      <main className="min-h-screen bg-[#F8F7FB] text-[#201D2A]">
         <div className="mx-auto max-w-6xl px-6 py-10 md:py-14">
-          <div className="rounded-[32px] border border-[#DFDCE5] bg-white p-8 shadow-[0_10px_30px_rgba(40,36,52,0.05)] md:p-12">
+          <div className="rounded-[32px] border border-[#E8E2F2] bg-white p-8 shadow-[0_10px_30px_rgba(80,70,120,0.05)] md:p-12">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
-                <span className="inline-flex rounded-full bg-[#E8E5EE] px-4 py-1.5 text-sm text-[#5F5A6B]">
+                <span className="inline-flex rounded-full bg-[#F1ECFA] px-4 py-1.5 text-sm text-[#7567A8]">
                   测试结果
                 </span>
                 <h1 className="mt-5 text-3xl font-semibold leading-tight md:text-5xl">
                   你可能适合生活在
                   <br />
-                  <span className="text-[#575261]">{mainCity.name}</span>
+                  <span className="text-[#6D5FA0]">{mainCity.name}</span>
                 </h1>
-                <p className="mt-5 max-w-3xl text-base leading-8 text-[#706C78] md:text-lg">
+                <p className="mt-5 max-w-3xl text-base leading-8 text-[#746F82] md:text-lg">
                   {getProfileSummary(profile)}
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-[#DFDCE5] bg-[#FAFAFB] px-5 py-3 text-sm text-[#5F5A6B]">
+              <div className="rounded-2xl border border-[#E8E2F2] bg-[#FCFBFE] px-5 py-3 text-sm text-[#7567A8]">
                 匹配度 {getMatchPercent(mainCity.distance)}%
               </div>
             </div>
 
             <div className="mt-10 grid gap-6 md:grid-cols-3">
-              <div className="rounded-[28px] border border-[#DFDCE5] bg-[#FAFAFB] p-6 md:col-span-2">
-                <div className="text-sm text-[#8A8493]">最匹配城市</div>
-                <div className="mt-3 text-3xl font-semibold text-[#1E1D24]">
+              <div className="rounded-[28px] border border-[#E8E2F2] bg-[#FCFBFE] p-6 md:col-span-2">
+                <div className="text-sm text-[#938CAB]">最匹配城市</div>
+                <div className="mt-3 text-3xl font-semibold text-[#201D2A]">
                   {mainCity.name}
                 </div>
-                <div className="mt-1 text-sm text-[#8A8493]">{mainCity.country}</div>
-                <div className="mt-5 inline-flex rounded-full bg-[#EFEDF3] px-4 py-2 text-sm text-[#5F5A6B]">
+                <div className="mt-1 text-sm text-[#938CAB]">{mainCity.country}</div>
+                <div className="mt-5 inline-flex rounded-full bg-[#F5F1FC] px-4 py-2 text-sm text-[#7567A8]">
                   {mainCity.tagline}
                 </div>
-                <p className="mt-6 max-w-2xl leading-8 text-[#706C78]">
+                <p className="mt-6 max-w-2xl leading-8 text-[#746F82]">
                   {mainCity.description}
                 </p>
               </div>
 
-              <div className="rounded-[28px] border border-[#DFDCE5] bg-white p-6">
-                <div className="text-sm text-[#8A8493]">你的城市偏好画像</div>
+              <div className="rounded-[28px] border border-[#E8E2F2] bg-white p-6">
+                <div className="text-sm text-[#938CAB]">你的城市偏好画像</div>
                 <div className="mt-6 space-y-5">
                   {(Object.keys(profile) as Dimension[]).map((key) => (
                     <div key={key}>
                       <div className="mb-2 flex items-center justify-between text-sm">
-                        <span className="text-[#4E4A56]">{dimensionLabels[key]}</span>
-                        <span className="text-[#8A8493]">{profile[key]}</span>
+                        <span className="text-[#514A63]">{dimensionLabels[key]}</span>
+                        <span className="text-[#938CAB]">{profile[key]}</span>
                       </div>
-                      <div className="h-2 rounded-full bg-[#E7E3EB]">
+                      <div className="h-2 rounded-full bg-[#EEE8F7]">
                         <div
-                          className="h-2 rounded-full bg-[#8D8798]"
+                          className="h-2 rounded-full bg-[#9A8BC8]"
                           style={{ width: `${(profile[key] / 10) * 100}%` }}
                         />
                       </div>
@@ -422,42 +422,42 @@ export default function CityQuizPage() {
             </div>
 
             <div className="mt-8 grid gap-6 md:grid-cols-2">
-              <div className="rounded-[28px] border border-[#DFDCE5] bg-white p-6">
-                <div className="text-xl font-semibold text-[#1E1D24]">也很适合你的城市</div>
+              <div className="rounded-[28px] border border-[#E8E2F2] bg-white p-6">
+                <div className="text-xl font-semibold text-[#201D2A]">也很适合你的城市</div>
                 <div className="mt-5 space-y-4">
                   {results.top3.slice(1).map((city) => (
                     <div
                       key={city.name}
-                      className="rounded-3xl border border-[#DFDCE5] bg-[#FAFAFB] p-5"
+                      className="rounded-3xl border border-[#E8E2F2] bg-[#FCFBFE] p-5"
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <div className="text-lg font-medium text-[#1E1D24]">{city.name}</div>
-                          <div className="mt-1 text-sm text-[#8A8493]">{city.country}</div>
+                          <div className="text-lg font-medium text-[#201D2A]">{city.name}</div>
+                          <div className="mt-1 text-sm text-[#938CAB]">{city.country}</div>
                         </div>
-                        <div className="text-sm text-[#8A8493]">
+                        <div className="text-sm text-[#938CAB]">
                           {getMatchPercent(city.distance, 68)}%
                         </div>
                       </div>
-                      <div className="mt-4 text-sm leading-6 text-[#706C78]">{city.tagline}</div>
+                      <div className="mt-4 text-sm leading-6 text-[#746F82]">{city.tagline}</div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="rounded-[28px] border border-[#DFDCE5] bg-white p-6">
-                <div className="text-xl font-semibold text-[#1E1D24]">
+              <div className="rounded-[28px] border border-[#E8E2F2] bg-white p-6">
+                <div className="text-xl font-semibold text-[#201D2A]">
                   你可能会被它吸引，但未必适合
                 </div>
-                <div className="mt-5 rounded-3xl border border-[#DFDCE5] bg-[#FAFAFB] p-5">
-                  <div className="text-lg font-medium text-[#1E1D24]">
+                <div className="mt-5 rounded-3xl border border-[#E8E2F2] bg-[#FCFBFE] p-5">
+                  <div className="text-lg font-medium text-[#201D2A]">
                     {results.challenge.name}
                   </div>
-                  <div className="mt-1 text-sm text-[#8A8493]">{results.challenge.country}</div>
-                  <div className="mt-4 text-sm leading-6 text-[#706C78]">
+                  <div className="mt-1 text-sm text-[#938CAB]">{results.challenge.country}</div>
+                  <div className="mt-4 text-sm leading-6 text-[#746F82]">
                     {results.challenge.tagline}
                   </div>
-                  <p className="mt-5 leading-8 text-[#706C78]">
+                  <p className="mt-5 leading-8 text-[#746F82]">
                     {results.challenge.description}
                   </p>
                 </div>
@@ -467,7 +467,7 @@ export default function CityQuizPage() {
             <div className="mt-8">
               <button
                 onClick={resetAll}
-                className="rounded-2xl bg-[#6A6675] px-6 py-4 text-sm font-medium text-white transition-all duration-200 hover:bg-[#5A5664]"
+                className="rounded-2xl bg-[#7C6DB0] px-6 py-4 text-sm font-medium text-white transition-all duration-200 hover:bg-[#6E5FA2]"
               >
                 重新测试
               </button>
@@ -479,30 +479,30 @@ export default function CityQuizPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F3F2F6] text-[#1E1D24]">
+    <main className="min-h-screen bg-[#F8F7FB] text-[#201D2A]">
       <div className="mx-auto max-w-4xl px-6 py-10 md:py-14">
-        <div className="rounded-[32px] border border-[#DFDCE5] bg-white p-8 shadow-[0_10px_30px_rgba(40,36,52,0.05)] md:p-12">
+        <div className="rounded-[32px] border border-[#E8E2F2] bg-white p-8 shadow-[0_10px_30px_rgba(80,70,120,0.05)] md:p-12">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <span className="inline-flex rounded-full bg-[#E8E5EE] px-4 py-1.5 text-sm text-[#5F5A6B]">
+              <span className="inline-flex rounded-full bg-[#F1ECFA] px-4 py-1.5 text-sm text-[#7567A8]">
                 城市气质测试
               </span>
               <h1 className="mt-4 text-2xl font-semibold md:text-3xl">
                 第 {currentIndex + 1} / {questions.length} 题
               </h1>
             </div>
-            <div className="text-sm text-[#8A8493]">{progress}%</div>
+            <div className="text-sm text-[#938CAB]">{progress}%</div>
           </div>
 
-          <div className="mt-6 h-1.5 rounded-full bg-[#E7E3EB]">
+          <div className="mt-6 h-1.5 rounded-full bg-[#EEE8F7]">
             <div
-              className="h-1.5 rounded-full bg-[#8D8798] transition-all duration-300"
+              className="h-1.5 rounded-full bg-[#9A8BC8] transition-all duration-300"
               style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
             />
           </div>
 
-          <div className="mt-10 rounded-[28px] border border-[#E5E1E9] bg-[#FAFAFB] p-6 md:p-8">
-            <p className="text-xl leading-9 text-[#1E1D24] md:text-2xl">
+          <div className="mt-10 rounded-[28px] border border-[#E8E2F2] bg-[#FCFBFE] p-6 md:p-8">
+            <p className="text-xl leading-9 text-[#201D2A] md:text-2xl">
               {currentQuestion.text}
             </p>
 
@@ -516,8 +516,8 @@ export default function CityQuizPage() {
                     onClick={() => handleSelect(option.value)}
                     className={`rounded-2xl border px-4 py-4 text-left text-sm transition-all duration-200 ${
                       active
-                        ? "border-[#A8A2B5] bg-[#EFEDF3] text-[#4E495A]"
-                        : "border-[#DFDCE5] bg-white text-[#4E4A56] hover:border-[#C7C2CF] hover:bg-[#F7F6F9]"
+                        ? "border-[#B8A8DF] bg-[#F5F1FC] text-[#5E4E93]"
+                        : "border-[#E8E2F2] bg-white text-[#514A63] hover:border-[#D7CDED] hover:bg-[#FBF9FE]"
                     }`}
                   >
                     {option.label}
@@ -531,12 +531,12 @@ export default function CityQuizPage() {
             <button
               onClick={handlePrev}
               disabled={currentIndex === 0}
-              className="rounded-2xl border border-[#DFDCE5] bg-white px-5 py-3 text-sm text-[#5F5A6B] transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40"
+              className="rounded-2xl border border-[#E8E2F2] bg-white px-5 py-3 text-sm text-[#7567A8] transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40"
             >
               上一题
             </button>
 
-            <div className="rounded-2xl border border-[#DFDCE5] bg-[#F7F6F9] px-5 py-3 text-sm text-[#8A8493]">
+            <div className="rounded-2xl border border-[#E8E2F2] bg-[#FCFBFE] px-5 py-3 text-sm text-[#938CAB]">
               选择答案后将自动进入下一题
             </div>
           </div>
