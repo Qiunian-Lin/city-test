@@ -413,6 +413,7 @@ export default function CityQuizPage() {
  const [answers, setAnswers] = useState<Record<number, number>>({});
  const [transitioning, setTransitioning] = useState(false);
  const [cityPage, setCityPage] = useState(0);
+ const [selectedCity, setSelectedCity] = useState<City | null>(null);
 
   const currentQuestion = questions[currentIndex];
   const profile = useMemo(() => calculateProfile(answers), [answers]);
@@ -469,14 +470,19 @@ export default function CityQuizPage() {
           </div>
           <div className={styles.cityGridWrap}>
   <div className={styles.cityGrid}>
-    {visibleCities.map((city) => (
-      <div key={city.name} className={styles.cityCardSm}>
-        <div className={styles.cityNameSm}>{city.name}</div>
-        <div className={styles.cityCountrySm}>{city.country}</div>
-        <div className={styles.cityTagSm}>{city.tagline}</div>
-      </div>
-    ))}
-  </div>
+  {visibleCities.map((city) => (
+    <button
+      key={city.name}
+      type="button"
+      className={styles.cityCardSm}
+      onClick={() => setSelectedCity(city)}
+    >
+      <div className={styles.cityNameSm}>{city.name}</div>
+      <div className={styles.cityCountrySm}>{city.country}</div>
+      <div className={styles.cityTagSm}>{city.tagline}</div>
+    </button>
+  ))}
+</div>
 
   <div className={styles.cityPager}>
     <button
@@ -501,10 +507,34 @@ export default function CityQuizPage() {
       下一页 →
     </button>
   </div>
+ </div>
 </div>
-          
-        </div>
-      </main>
+
+{selectedCity && (
+  <div className={styles.modalOverlay} onClick={() => setSelectedCity(null)}>
+    <div
+      className={styles.modalCard}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <button
+        type="button"
+        className={styles.modalClose}
+        onClick={() => setSelectedCity(null)}
+      >
+        ×
+      </button>
+
+      <div className={styles.modalContent}>
+        <div className={styles.modalCountry}>{selectedCity.country}</div>
+        <h2 className={styles.modalTitle}>{selectedCity.name}</h2>
+        <div className={styles.modalTagline}>{selectedCity.tagline}</div>
+        <p className={styles.modalDesc}>{selectedCity.description}</p>
+      </div>
+    </div>
+  </div>
+)}
+        
+     </main>
     );
   }
 
