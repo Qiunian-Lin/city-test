@@ -127,23 +127,22 @@
 }
 
 .cityCardSm {
-  background: white;
-  border: 3px solid blue;
+  background: var(--white);
+  border: 1px solid var(--sand3);
   border-radius: 14px;
   padding: 18px 20px;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
   text-align: left;
   appearance: none;
   width: 100%;
   font-family: inherit;
-  transition: all 0.2s ease;
 }
 
 .cityCardSm:hover {
-  background: yellow;
-  border-color: red;
-  transform: translateY(-10px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  border-color: var(--terra2);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(15, 25, 35, 0.08);
 }
 
 .cityNameSm {
