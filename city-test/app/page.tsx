@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 
 const style = `
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap');
@@ -44,7 +44,6 @@ const style = `
     max-width: 900px;
   }
 
-  /* LANDING */
   .landing-wrap {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -163,7 +162,6 @@ const style = `
     font-weight: 300;
   }
 
-  /* QUIZ */
   .quiz-header {
     display: flex;
     align-items: flex-start;
@@ -293,7 +291,6 @@ const style = `
     letter-spacing: 0.02em;
   }
 
-  /* RESULTS */
   .result-hero {
     background: var(--card);
     border: 1px solid var(--border);
@@ -484,122 +481,159 @@ const style = `
   }
 `;
 
-const cities = [
+type Dimension = "pace" | "pressure" | "social" | "freedom" | "stability";
+
+type City = {
+  name: string;
+  country: string;
+  tagline: string;
+  description: string;
+  tags: Record<Dimension, number>;
+};
+
+type Question = {
+  id: number;
+  text: string;
+  dimension: Dimension;
+  reverse?: boolean;
+};
+
+type Answers = Record<number, number>;
+
+type Profile = Record<Dimension, number>;
+
+const cities: City[] = [
   {
     name: "New York",
     country: "United States",
     tagline: "野心、流动、碰撞、高速运转",
-    description: "你并不怕被推着走，反而需要那种持续涌动的能量来维持自己的状态。这座城市不会等你，但也正是这样，你才感到真实。",
+    description:
+      "你并不怕被推着走，反而需要那种持续涌动的能量来维持自己的状态。这座城市不会等你，但也正是这样，你才感到真实。",
     tags: { pace: 10, pressure: 10, social: 8, freedom: 7, stability: 5 },
   },
   {
     name: "Tokyo",
     country: "Japan",
     tagline: "精细、有序、克制、密度中的静默",
-    description: "你对规则并不抗拒，甚至在清晰的秩序里会感到一种奇特的自由。这里是给那些内心热烈、外表收敛的人的城市。",
+    description:
+      "你对规则并不抗拒，甚至在清晰的秩序里会感到一种奇特的自由。这里是给那些内心热烈、外表收敛的人的城市。",
     tags: { pace: 9, pressure: 8, social: 4, freedom: 3, stability: 9 },
   },
   {
     name: "Paris",
     country: "France",
     tagline: "美感、漫游、松弛、有点傲慢的优雅",
-    description: "生活对你而言不只是功能，而是一种值得被认真对待的质地。你会在这里的街角找到某种共鸣。",
+    description:
+      "生活对你而言不只是功能，而是一种值得被认真对待的质地。你会在这里的街角找到某种共鸣。",
     tags: { pace: 5, pressure: 4, social: 6, freedom: 8, stability: 5 },
   },
   {
     name: "Berlin",
     country: "Germany",
     tagline: "实验性、非主流、允许出走、不问来路",
-    description: "你不太在意别人怎么定义正确的人生路线。这座城市给你的，不是答案，而是不需要答案的空间。",
+    description:
+      "你不太在意别人怎么定义正确的人生路线。这座城市给你的，不是答案，而是不需要答案的空间。",
     tags: { pace: 5, pressure: 3, social: 7, freedom: 10, stability: 3 },
   },
   {
     name: "Barcelona",
     country: "Spain",
     tagline: "阳光、身体感、社交、不赶时间",
-    description: "你相信生活本来就应该有余地。这里的节奏会让你重新找到和身体、和他人真实相处的感觉。",
+    description:
+      "你相信生活本来就应该有余地。这里的节奏会让你重新找到和身体、和他人真实相处的感觉。",
     tags: { pace: 4, pressure: 3, social: 9, freedom: 8, stability: 5 },
   },
   {
     name: "Singapore",
     country: "Singapore",
     tagline: "高效、清洁、国际化、系统感强",
-    description: "你喜欢知道事情是可预期的、可依靠的。这里的稳定感不是无聊，而是让你可以把精力放到真正重要的事上。",
+    description:
+      "你喜欢知道事情是可预期的、可依靠的。这里的稳定感不是无聊，而是让你可以把精力放到真正重要的事上。",
     tags: { pace: 8, pressure: 7, social: 5, freedom: 3, stability: 10 },
   },
   {
     name: "Shanghai",
     country: "China",
     tagline: "务实、速度、机会密度高、中西混杂",
-    description: "你能在变化里找到立足点，也不排斥在压力中保持行动力。这里适合脑子转得快、又肯扎下去的人。",
+    description:
+      "你能在变化里找到立足点，也不排斥在压力中保持行动力。这里适合脑子转得快、又肯扎下去的人。",
     tags: { pace: 9, pressure: 9, social: 7, freedom: 5, stability: 7 },
   },
   {
     name: "London",
     country: "United Kingdom",
     tagline: "层次丰富、克制多元、历史感与当代并存",
-    description: "你会在复杂里感到自在，而不是不知所措。这座城市不会主动靠近你，但只要你懂得找，它的深度是无尽的。",
+    description:
+      "你会在复杂里感到自在，而不是不知所措。这座城市不会主动靠近你，但只要你懂得找，它的深度是无尽的。",
     tags: { pace: 7, pressure: 7, social: 5, freedom: 6, stability: 8 },
   },
   {
     name: "Vancouver",
     country: "Canada",
     tagline: "自然、平静、安全、留白够用",
-    description: "你知道什么时候该停下来。比起一直往前冲，你更在意生活本身还值不值得好好过。",
+    description:
+      "你知道什么时候该停下来。比起一直往前冲，你更在意生活本身还值不值得好好过。",
     tags: { pace: 3, pressure: 3, social: 6, freedom: 7, stability: 9 },
   },
   {
     name: "Sydney",
     country: "Australia",
     tagline: "开阔、阳光、工作与生活之间有边界",
-    description: "你希望下班后还是你自己。不用把全部时间都给工作，也不用随时保持兴奋——这座城市允许你只是好好活着。",
+    description:
+      "你希望下班后还是你自己。不用把全部时间都给工作，也不用随时保持兴奋——这座城市允许你只是好好活着。",
     tags: { pace: 5, pressure: 4, social: 8, freedom: 7, stability: 8 },
   },
   {
     name: "Amsterdam",
     country: "Netherlands",
     tagline: "包容、脚踏实地、个性空间大",
-    description: "你不太需要被理解，但需要不被干涉。这里的人会给彼此足够的空间，你可以做自己，不需要解释。",
+    description:
+      "你不太需要被理解，但需要不被干涉。这里的人会给彼此足够的空间，你可以做自己，不需要解释。",
     tags: { pace: 4, pressure: 4, social: 7, freedom: 9, stability: 7 },
   },
   {
     name: "Lisbon",
     country: "Portugal",
     tagline: "慵懒、诗意、负担得起的美好",
-    description: "你有时候只是想换一种活法。这里的阳光和缓慢，不是逃避，而是让你重新想清楚，什么是真正想要的。",
+    description:
+      "你有时候只是想换一种活法。这里的阳光和缓慢，不是逃避，而是让你重新想清楚，什么是真正想要的。",
     tags: { pace: 3, pressure: 2, social: 7, freedom: 8, stability: 5 },
   },
   {
     name: "Seoul",
     country: "South Korea",
     tagline: "审美、高压、潮流、自我要求极高",
-    description: "你对品质有一种近乎本能的敏感，也能承受高强度的自我驱动。这里是给那些不甘平庸又懂得美的人的城市。",
+    description:
+      "你对品质有一种近乎本能的敏感，也能承受高强度的自我驱动。这里是给那些不甘平庸又懂得美的人的城市。",
     tags: { pace: 9, pressure: 9, social: 7, freedom: 5, stability: 7 },
   },
   {
     name: "Vienna",
     country: "Austria",
     tagline: "古典、精致、慢、有文化积淀",
-    description: "你不急于抵达，更在意过程本身是否值得。这里的生活节奏允许你把时间花在真正有深度的事物上。",
+    description:
+      "你不急于抵达，更在意过程本身是否值得。这里的生活节奏允许你把时间花在真正有深度的事物上。",
     tags: { pace: 3, pressure: 3, social: 5, freedom: 6, stability: 9 },
   },
   {
     name: "Dubai",
     country: "UAE",
     tagline: "目标感强、上升快、资源密集、强烈的外向性",
-    description: "你的驱动力不需要外界来激活，你本来就很清楚自己要什么。这里给的是舞台，剩下的要靠你自己。",
+    description:
+      "你的驱动力不需要外界来激活，你本来就很清楚自己要什么。这里给的是舞台，剩下的要靠你自己。",
     tags: { pace: 9, pressure: 8, social: 8, freedom: 5, stability: 7 },
   },
   {
     name: "Buenos Aires",
     country: "Argentina",
     tagline: "热烈、文艺、情感浓度高、有点乱但很有劲",
-    description: "你需要生活里有真实的温度，有可以真正相遇的人，有不那么整洁但更有生命力的日常。",
+    description:
+      "你需要生活里有真实的温度，有可以真正相遇的人，有不那么整洁但更有生命力的日常。",
     tags: { pace: 5, pressure: 4, social: 10, freedom: 8, stability: 3 },
   },
 ];
 
-const questions = [
+const questions: Question[] = [
   { id: 1, text: "时间被安排得很满的时候，我通常不觉得累——反而有种充实感。", dimension: "pace" },
   { id: 2, text: "我会自然地期待每天有很多事情发生。", dimension: "pace" },
   { id: 3, text: "激烈的竞争环境不会让我崩溃，有时甚至让我兴奋。", dimension: "pressure" },
@@ -626,7 +660,7 @@ const questions = [
   { id: 24, text: "生活里的不确定，有时候是一种活力的来源。", dimension: "stability", reverse: true },
 ];
 
-const options = [
+const options: Array<{ label: string; value: number }> = [
   { label: "完全不像我", value: 1 },
   { label: "不太像", value: 2 },
   { label: "说不准", value: 3 },
@@ -634,7 +668,7 @@ const options = [
   { label: "非常像我", value: 5 },
 ];
 
-const dimensionLabels = {
+const dimensionLabels: Record<Dimension, string> = {
   pace: "生活节奏",
   pressure: "压力耐受",
   social: "社交开放",
@@ -642,84 +676,128 @@ const dimensionLabels = {
   stability: "稳定安全感",
 };
 
-function toTenScale(avg: number) {
+function toTenScale(avg: number): number {
   return Number((1 + ((avg - 1) / 4) * 9).toFixed(1));
 }
 
-function calculateProfile(answers) {
-  const grouped = { pace: [], pressure: [], social: [], freedom: [], stability: [] };
+function calculateProfile(answers: Answers): Profile {
+  const grouped: Record<Dimension, number[]> = {
+    pace: [],
+    pressure: [],
+    social: [],
+    freedom: [],
+    stability: [],
+  };
+
   for (const q of questions) {
     const raw = answers[q.id];
     if (!raw) continue;
     const score = q.reverse ? 6 - raw : raw;
     grouped[q.dimension].push(score);
   }
-  const profile = { pace: 5.5, pressure: 5.5, social: 5.5, freedom: 5.5, stability: 5.5 };
-  Object.keys(grouped).forEach((key) => {
+
+  const profile: Profile = {
+    pace: 5.5,
+    pressure: 5.5,
+    social: 5.5,
+    freedom: 5.5,
+    stability: 5.5,
+  };
+
+  (Object.keys(grouped) as Dimension[]).forEach((key) => {
     const arr = grouped[key];
     if (arr.length) {
-      const avg = arr.reduce((a, b) => a + b, 0) / arr.length;
+      const avg = arr.reduce((a: number, b: number) => a + b, 0) / arr.length;
       profile[key] = toTenScale(avg);
     }
   });
+
   return profile;
 }
 
-function getCityDistance(profile, city) {
-  return Object.keys(profile).reduce((sum, key) => sum + Math.abs(profile[key] - city.tags[key]), 0);
+function getCityDistance(profile: Profile, city: City): number {
+  return (Object.keys(profile) as Dimension[]).reduce((sum: number, key: Dimension) => {
+    return sum + Math.abs(profile[key] - city.tags[key]);
+  }, 0);
 }
 
-function getResults(profile) {
-  const ranked = cities.map((city) => ({ ...city, distance: getCityDistance(profile, city) })).sort((a, b) => a.distance - b.distance);
+function getResults(profile: Profile): { top3: CityWithDistance[]; challenge: CityWithDistance } {
+  const ranked: CityWithDistance[] = cities
+    .map((city) => ({
+      ...city,
+      distance: getCityDistance(profile, city),
+    }))
+    .sort((a, b) => a.distance - b.distance);
+
   const top3 = ranked.slice(0, 3);
-  const challenge = [...ranked].sort((a, b) => {
-    const fa = Math.abs(profile.freedom - a.tags.freedom) + Math.abs(profile.pressure - a.tags.pressure);
-    const fb = Math.abs(profile.freedom - b.tags.freedom) + Math.abs(profile.pressure - b.tags.pressure);
-    return fa - fb;
-  }).reverse().find((city) => !top3.some((t) => t.name === city.name)) || ranked[ranked.length - 1];
+
+  const challenge =
+    [...ranked]
+      .sort((a, b) => {
+        const fa =
+          Math.abs(profile.freedom - a.tags.freedom) +
+          Math.abs(profile.pressure - a.tags.pressure);
+        const fb =
+          Math.abs(profile.freedom - b.tags.freedom) +
+          Math.abs(profile.pressure - b.tags.pressure);
+        return fa - fb;
+      })
+      .reverse()
+      .find((city) => !top3.some((t) => t.name === city.name)) || ranked[ranked.length - 1];
+
   return { top3, challenge };
 }
 
-function getProfileSummary(profile) {
-  const keys = Object.keys(profile);
-  const highest = keys.sort((a, b) => profile[b] - profile[a])[0];
-  const lowest = keys.sort((a, b) => profile[a] - profile[b])[0];
-  const highText = {
+function getProfileSummary(profile: Profile): string {
+  const highest = ([...Object.keys(profile)] as Dimension[]).sort(
+    (a, b) => profile[b] - profile[a]
+  )[0];
+  const lowest = ([...Object.keys(profile)] as Dimension[]).sort(
+    (a, b) => profile[a] - profile[b]
+  )[0];
+
+  const highText: Record<Dimension, string> = {
     pace: "你对有推进感、有流动性的生活有天然的适应力。",
     pressure: "你对竞争和上升空间有一定的耐受力，甚至需要它来维持状态。",
     social: "你在人与人的连接里找到能量，需要一定的外部活力。",
     freedom: "你很看重个性空间，不太喜欢被框定得太死。",
     stability: "安全感和可预期性对你来说很重要，你需要稳固的地基。",
   };
-  const lowText = {
+
+  const lowText: Record<Dimension, string> = {
     pace: "被持续催赶的生活节奏，并不适合你。",
     pressure: "高压高卷的环境，会比较明显地消耗你。",
     social: "你更需要安静和边界，而不是持续不断的社交输入。",
     freedom: "你并不排斥清晰的规则和结构，有时反而需要它。",
     stability: "你对变化和不确定性的容纳度比较高。",
   };
+
   return `${highText[highest]} ${lowText[lowest]}`;
 }
 
-function getMatchPercent(distance, floor = 72) {
+function getMatchPercent(distance: number, floor = 72): number {
   return Math.max(floor, 100 - Math.round(distance * 2));
 }
+
+type CityWithDistance = City & { distance: number };
 
 export default function CityQuiz() {
   const [started, setStarted] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState({});
+  const [answers, setAnswers] = useState<Answers>({});
   const [animating, setAnimating] = useState(false);
 
   const currentQuestion = questions[currentIndex];
   const profile = useMemo(() => calculateProfile(answers), [answers]);
   const results = useMemo(() => getResults(profile), [profile]);
 
-  const handleSelect = (value) => {
+  const handleSelect = (value: number) => {
     if (animating) return;
+
     setAnswers((prev) => ({ ...prev, [currentQuestion.id]: value }));
     setAnimating(true);
+
     setTimeout(() => {
       setAnimating(false);
       if (currentIndex < questions.length - 1) {
@@ -735,6 +813,7 @@ export default function CityQuiz() {
     setSubmitted(false);
     setCurrentIndex(0);
     setAnswers({});
+    setAnimating(false);
   };
 
   if (!started) {
@@ -747,7 +826,8 @@ export default function CityQuiz() {
               <div>
                 <span className="badge">城市气质测试</span>
                 <h1 className="landing-title serif">
-                  哪座城市，<br />
+                  哪座城市，
+                  <br />
                   <em>适合你生活？</em>
                 </h1>
                 <p className="landing-desc">
@@ -755,10 +835,13 @@ export default function CityQuiz() {
                   找到与你内在气质更接近的城市。
                 </p>
                 <div className="btn-row">
-                  <button className="btn-primary" onClick={() => setStarted(true)}>开始测试</button>
+                  <button className="btn-primary" onClick={() => setStarted(true)}>
+                    开始测试
+                  </button>
                   <div className="btn-ghost">{questions.length} 道题 · 约 3–4 分钟</div>
                 </div>
               </div>
+
               <div className="city-grid">
                 {cities.slice(0, 6).map((city) => (
                   <div key={city.name} className="city-card-sm">
@@ -777,6 +860,7 @@ export default function CityQuiz() {
 
   if (submitted) {
     const mainCity = results.top3[0];
+
     return (
       <>
         <style>{style}</style>
@@ -796,9 +880,10 @@ export default function CityQuiz() {
                 <div className="tagline-pill">{mainCity.tagline}</div>
                 <p className="city-desc">{mainCity.description}</p>
               </div>
+
               <div className="result-card">
                 <div className="result-card-title">你的偏好画像</div>
-                {Object.keys(profile).map((key) => (
+                {(Object.keys(profile) as Dimension[]).map((key) => (
                   <div key={key} className="dimension-row">
                     <div className="dim-label-row">
                       <span>{dimensionLabels[key]}</span>
@@ -840,7 +925,9 @@ export default function CityQuiz() {
             </div>
 
             <div className="bottom-row">
-              <button className="btn-primary" onClick={resetAll}>重新测试</button>
+              <button className="btn-primary" onClick={resetAll}>
+                重新测试
+              </button>
             </div>
           </div>
         </div>
@@ -860,27 +947,32 @@ export default function CityQuiz() {
                 第 {currentIndex + 1} 题 / 共 {questions.length} 题
               </div>
             </div>
-            <div style={{ fontSize: 13, color: 'var(--ink-4)', paddingTop: 8 }}>
-              {Math.round(((currentIndex) / questions.length) * 100)}%
+            <div style={{ fontSize: 13, color: "var(--ink-4)", paddingTop: 8 }}>
+              {Math.round((currentIndex / questions.length) * 100)}%
             </div>
           </div>
 
           <div className="progress-track">
-            <div className="progress-fill" style={{ width: `${((currentIndex) / questions.length) * 100}%` }} />
+            <div
+              className="progress-fill"
+              style={{ width: `${(currentIndex / questions.length) * 100}%` }}
+            />
           </div>
 
-          <div className="question-card" style={{ opacity: animating ? 0.5 : 1, transition: 'opacity 0.2s' }}>
-            <p className="question-text">
-              {currentQuestion.text}
-            </p>
+          <div
+            className="question-card"
+            style={{ opacity: animating ? 0.5 : 1, transition: "opacity 0.2s" }}
+          >
+            <p className="question-text">{currentQuestion.text}</p>
 
             <div className="options-row">
               {options.map((opt) => {
                 const active = answers[currentQuestion.id] === opt.value;
+
                 return (
                   <button
                     key={opt.value}
-                    className={`option-btn${active ? ' active' : ''}`}
+                    className={`option-btn${active ? " active" : ""}`}
                     onClick={() => handleSelect(opt.value)}
                   >
                     <div className="option-dots">
