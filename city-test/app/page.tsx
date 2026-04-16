@@ -407,15 +407,23 @@ function getMatchPercent(distance: number, floor = 72): number {
 }
 
 export default function CityQuizPage() {
-  const [started, setStarted] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, number>>({});
-  const [transitioning, setTransitioning] = useState(false);
+ const [started, setStarted] = useState(false);
+ const [submitted, setSubmitted] = useState(false);
+ const [currentIndex, setCurrentIndex] = useState(0);
+ const [answers, setAnswers] = useState<Record<number, number>>({});
+ const [transitioning, setTransitioning] = useState(false);
+ const [cityPage, setCityPage] = useState(0);
 
   const currentQuestion = questions[currentIndex];
   const profile = useMemo(() => calculateProfile(answers), [answers]);
   const results = useMemo(() => getResults(profile), [profile]);
+
+  const citiesPerPage = 6;
+ const totalCityPages = Math.ceil(cities.length / citiesPerPage);
+ const visibleCities = cities.slice(
+   cityPage * citiesPerPage,
+   (cityPage + 1) * citiesPerPage
+ );
 
   const handleSelect = (value: number) => {
     if (transitioning) return;
@@ -459,15 +467,42 @@ export default function CityQuizPage() {
               <span className={styles.btnMeta}>{questions.length} 道题 · 约 4 分钟</span>
             </div>
           </div>
-          <div className={styles.cityGrid}>
-            {cities.slice(0, 6).map((city) => (
-              <div key={city.name} className={styles.cityCardSm}>
-                <div className={styles.cityNameSm}>{city.name}</div>
-                <div className={styles.cityCountrySm}>{city.country}</div>
-                <div className={styles.cityTagSm}>{city.tagline}</div>
-              </div>
-            ))}
-          </div>
+          <div className={styles.cityGridWrap}>
+  <div className={styles.cityGrid}>
+    {visibleCities.map((city) => (
+      <div key={city.name} className={styles.cityCardSm}>
+        <div className={styles.cityNameSm}>{city.name}</div>
+        <div className={styles.cityCountrySm}>{city.country}</div>
+        <div className={styles.cityTagSm}>{city.tagline}</div>
+      </div>
+    ))}
+  </div>
+
+  <div className={styles.cityPager}>
+    <button
+      type="button"
+      className={styles.pageBtn}
+      onClick={() => setCityPage((p) => Math.max(p - 1, 0))}
+      disabled={cityPage === 0}
+    >
+      ← 上一页
+    </button>
+
+    <span className={styles.pageInfo}>
+      第 {cityPage + 1} / {totalCityPages} 页
+    </span>
+
+    <button
+      type="button"
+      className={styles.pageBtn}
+      onClick={() => setCityPage((p) => Math.min(p + 1, totalCityPages - 1))}
+      disabled={cityPage === totalCityPages - 1}
+    >
+      下一页 →
+    </button>
+  </div>
+</div>
+          
         </div>
       </main>
     );
