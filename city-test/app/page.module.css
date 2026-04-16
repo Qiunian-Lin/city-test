@@ -131,8 +131,12 @@
   border: 1px solid var(--sand3);
   border-radius: 14px;
   padding: 18px 20px;
-  transition: border-color 0.2s, transform 0.2s;
-  cursor: default;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  text-align: left;
+  appearance: none;
+  width: 100%;
+  font-family: inherit;
 }
 
 .cityCardSm:hover {
@@ -656,4 +660,75 @@
 .pageInfo {
   font-size: 13px;
   color: var(--ink4);
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 25, 35, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 999;
+}
+
+.modalCard {
+  width: min(680px, 100%);
+  background: var(--white);
+  border: 1px solid var(--sand3);
+  border-radius: 20px;
+  box-shadow: 0 20px 70px rgba(15, 25, 35, 0.18);
+  position: relative;
+  padding: 38px 32px 30px;
+}
+
+.modalClose {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: var(--navy);
+  color: var(--sand);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.modalContent {
+  padding-top: 8px;
+}
+
+.modalCountry {
+  font-size: 11px;
+  color: var(--ink4);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+
+.modalTitle {
+  margin: 0;
+  font-family: "Lora", serif;
+  font-size: clamp(30px, 4vw, 46px);
+  line-height: 1.1;
+  color: var(--navy);
+}
+
+.modalTagline {
+  margin-top: 14px;
+  font-size: 14px;
+  color: var(--terra);
+  line-height: 1.8;
+}
+
+.modalDesc {
+  margin-top: 18px;
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--ink3);
+  font-weight: 300;
 }
