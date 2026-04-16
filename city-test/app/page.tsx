@@ -1,485 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-
-const style = `
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap');
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --ink: #1a1625;
-    --ink-2: #3d3650;
-    --ink-3: #6b6280;
-    --ink-4: #9d96b0;
-    --surface: #faf9fc;
-    --card: #ffffff;
-    --border: #ede8f5;
-    --accent: #6b5fa6;
-    --accent-light: #f2eeff;
-    --accent-mid: #c2b5e8;
-    --warm: #d4956a;
-    --warm-light: #fdf3ec;
-  }
-
-  body {
-    background: var(--surface);
-    color: var(--ink);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-  }
-
-  .serif { font-family: 'Playfair Display', serif; }
-
-  .page {
-    min-height: 100vh;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 40px 20px 60px;
-  }
-
-  .container {
-    width: 100%;
-    max-width: 900px;
-  }
-
-  .landing-wrap {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    align-items: start;
-  }
-  @media (max-width: 700px) {
-    .landing-wrap { grid-template-columns: 1fr; }
-    .city-grid { display: none !important; }
-  }
-
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--accent-light);
-    color: var(--accent);
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    padding: 6px 14px;
-    border-radius: 100px;
-    border: 1px solid var(--accent-mid);
-  }
-
-  .landing-title {
-    font-size: clamp(38px, 6vw, 60px);
-    font-weight: 600;
-    line-height: 1.1;
-    color: var(--ink);
-    margin-top: 20px;
-    letter-spacing: -0.02em;
-  }
-
-  .landing-title em {
-    font-style: italic;
-    color: var(--accent);
-  }
-
-  .landing-desc {
-    margin-top: 18px;
-    font-size: 16px;
-    line-height: 1.85;
-    color: var(--ink-3);
-    font-weight: 300;
-    max-width: 400px;
-  }
-
-  .btn-row {
-    display: flex;
-    gap: 12px;
-    margin-top: 36px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .btn-primary {
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    padding: 14px 28px;
-    border-radius: 14px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    letter-spacing: 0.02em;
-    font-family: 'DM Sans', sans-serif;
-    transition: all 0.2s;
-  }
-  .btn-primary:hover { background: #5a4f8f; transform: translateY(-1px); }
-
-  .btn-ghost {
-    background: transparent;
-    color: var(--ink-3);
-    border: 1px solid var(--border);
-    padding: 14px 20px;
-    border-radius: 14px;
-    font-size: 13px;
-    font-weight: 400;
-    cursor: default;
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  .city-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-
-  .city-card-sm {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 18px;
-    transition: all 0.2s;
-  }
-  .city-card-sm:hover { transform: translateY(-2px); border-color: var(--accent-mid); }
-
-  .city-name-sm {
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--ink);
-  }
-  .city-country-sm {
-    font-size: 11px;
-    color: var(--ink-4);
-    margin-top: 2px;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-  .city-tag-sm {
-    margin-top: 10px;
-    font-size: 12px;
-    line-height: 1.7;
-    color: var(--ink-3);
-    font-weight: 300;
-  }
-
-  .quiz-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: 32px;
-  }
-
-  .quiz-num {
-    font-size: 13px;
-    color: var(--ink-4);
-    font-weight: 400;
-    margin-top: 8px;
-  }
-
-  .progress-track {
-    height: 3px;
-    background: var(--border);
-    border-radius: 10px;
-    margin-bottom: 40px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--warm));
-    border-radius: 10px;
-    transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
-  }
-
-  .question-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 28px;
-    padding: 48px;
-    margin-bottom: 24px;
-    min-height: 340px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-shadow: 0 4px 24px rgba(100,80,160,0.06);
-  }
-  @media (max-width: 600px) {
-    .question-card { padding: 28px 24px; }
-  }
-
-  .question-text {
-    font-size: clamp(20px, 3vw, 26px);
-    line-height: 1.7;
-    color: var(--ink);
-    font-weight: 400;
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-  }
-
-  .options-row {
-    display: flex;
-    gap: 8px;
-    margin-top: 36px;
-    flex-wrap: wrap;
-  }
-
-  .option-btn {
-    flex: 1;
-    min-width: 80px;
-    padding: 14px 8px;
-    border-radius: 14px;
-    border: 1.5px solid var(--border);
-    background: var(--surface);
-    color: var(--ink-3);
-    font-size: 12px;
-    font-weight: 400;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.18s;
-    line-height: 1.4;
-    font-family: 'DM Sans', sans-serif;
-  }
-  .option-btn:hover {
-    border-color: var(--accent-mid);
-    background: var(--accent-light);
-    color: var(--accent);
-  }
-  .option-btn.active {
-    border-color: var(--accent);
-    background: var(--accent-light);
-    color: var(--accent);
-    font-weight: 500;
-  }
-
-  .option-dots {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    justify-content: center;
-    margin-bottom: 6px;
-  }
-  .dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--border);
-    transition: background 0.18s;
-  }
-  .option-btn:hover .dot, .option-btn.active .dot { background: var(--accent); }
-
-  .quiz-nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .btn-back {
-    background: transparent;
-    color: var(--ink-4);
-    border: 1px solid var(--border);
-    padding: 10px 18px;
-    border-radius: 12px;
-    font-size: 13px;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    transition: all 0.2s;
-  }
-  .btn-back:hover:not(:disabled) { color: var(--ink); border-color: var(--ink-3); }
-  .btn-back:disabled { opacity: 0.3; cursor: not-allowed; }
-
-  .hint-text {
-    font-size: 12px;
-    color: var(--ink-4);
-    letter-spacing: 0.02em;
-  }
-
-  .result-hero {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 28px;
-    padding: 48px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 24px rgba(100,80,160,0.06);
-    position: relative;
-    overflow: hidden;
-  }
-  .result-hero::before {
-    content: '';
-    position: absolute;
-    top: 0; right: 0;
-    width: 280px; height: 280px;
-    background: radial-gradient(ellipse at top right, var(--accent-light) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  @media (max-width: 600px) {
-    .result-hero { padding: 28px 24px; }
-  }
-
-  .result-label {
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink-4);
-    font-weight: 500;
-  }
-
-  .result-city {
-    font-size: clamp(44px, 7vw, 72px);
-    font-family: 'Playfair Display', serif;
-    font-weight: 600;
-    color: var(--accent);
-    line-height: 1.05;
-    letter-spacing: -0.02em;
-    margin-top: 8px;
-  }
-
-  .result-country {
-    font-size: 14px;
-    color: var(--ink-4);
-    margin-top: 4px;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-
-  .result-summary {
-    margin-top: 20px;
-    font-size: 16px;
-    line-height: 1.9;
-    color: var(--ink-3);
-    font-weight: 300;
-    max-width: 520px;
-  }
-
-  .match-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--warm-light);
-    color: var(--warm);
-    border: 1px solid #f0d5b8;
-    padding: 8px 16px;
-    border-radius: 100px;
-    font-size: 13px;
-    font-weight: 500;
-    margin-top: 24px;
-  }
-
-  .result-grid {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 20px;
-    margin-top: 20px;
-  }
-  @media (max-width: 700px) {
-    .result-grid { grid-template-columns: 1fr; }
-  }
-
-  .result-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 28px;
-  }
-
-  .result-card-title {
-    font-size: 13px;
-    color: var(--ink-4);
-    letter-spacing: 0.04em;
-    font-weight: 500;
-    margin-bottom: 16px;
-  }
-
-  .city-desc {
-    font-size: 15px;
-    line-height: 1.85;
-    color: var(--ink-3);
-    font-weight: 300;
-  }
-
-  .tagline-pill {
-    display: inline-block;
-    background: var(--accent-light);
-    color: var(--accent);
-    border-radius: 100px;
-    padding: 6px 14px;
-    font-size: 12px;
-    margin: 12px 0 16px;
-    border: 1px solid var(--accent-mid);
-  }
-
-  .dimension-row {
-    margin-bottom: 16px;
-  }
-  .dim-label-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 6px;
-    font-size: 13px;
-    color: var(--ink-3);
-  }
-  .dim-score {
-    color: var(--ink-4);
-    font-size: 12px;
-  }
-  .dim-track {
-    height: 5px;
-    background: var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  .dim-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent-mid), var(--accent));
-    border-radius: 10px;
-    transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
-  }
-
-  .alt-city-item {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 18px 20px;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-    transition: all 0.2s;
-  }
-  .alt-city-item:hover { border-color: var(--accent-mid); }
-
-  .alt-city-name { font-size: 15px; font-weight: 500; color: var(--ink); }
-  .alt-city-country { font-size: 11px; color: var(--ink-4); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.04em; }
-  .alt-city-tag { font-size: 12px; color: var(--ink-3); margin-top: 8px; line-height: 1.6; font-weight: 300; }
-  .alt-match { font-size: 12px; color: var(--ink-4); white-space: nowrap; }
-
-  .challenge-box {
-    background: var(--warm-light);
-    border: 1px solid #f0d5b8;
-    border-radius: 18px;
-    padding: 20px;
-  }
-  .challenge-label { font-size: 11px; color: var(--warm); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; margin-bottom: 10px; }
-  .challenge-name { font-size: 18px; font-weight: 500; color: var(--ink); }
-  .challenge-country { font-size: 11px; color: #c4855a; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.04em; }
-  .challenge-tag { font-size: 12px; color: #9a6d52; margin-top: 8px; line-height: 1.7; }
-  .challenge-desc { font-size: 14px; color: #7a5540; margin-top: 12px; line-height: 1.8; font-weight: 300; }
-
-  .bottom-row {
-    margin-top: 28px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .section-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-top: 20px;
-  }
-  @media (max-width: 700px) {
-    .section-row { grid-template-columns: 1fr; }
-  }
-`;
+import styles from "./page.module.css";
 
 type Dimension = "pace" | "pressure" | "social" | "freedom" | "stability";
 
@@ -494,13 +16,10 @@ type City = {
 type Question = {
   id: number;
   text: string;
+  scene?: string;
   dimension: Dimension;
   reverse?: boolean;
 };
-
-type Answers = Record<number, number>;
-
-type Profile = Record<Dimension, number>;
 
 const cities: City[] = [
   {
@@ -548,7 +67,7 @@ const cities: City[] = [
     country: "Singapore",
     tagline: "高效、清洁、国际化、系统感强",
     description:
-      "你喜欢知道事情是可预期的、可依靠的。这里的稳定感不是无聊，而是让你可以把精力放到真正重要的事上。",
+      "你喜欢知道事情是可预期、可依靠的。这里的稳定感不是无聊，而是让你可以把精力放到真正重要的事上。",
     tags: { pace: 8, pressure: 7, social: 5, freedom: 3, stability: 10 },
   },
   {
@@ -596,7 +115,7 @@ const cities: City[] = [
     country: "Portugal",
     tagline: "慵懒、诗意、负担得起的美好",
     description:
-      "你有时候只是想换一种活法。这里的阳光和缓慢，不是逃避，而是让你重新想清楚，什么是真正想要的。",
+      "你有时候只是想换一种活法。这里的阳光和缓慢，不是逃避，而是让你重新想清楚什么是真正想要的。",
     tags: { pace: 3, pressure: 2, social: 7, freedom: 8, stability: 5 },
   },
   {
@@ -618,7 +137,7 @@ const cities: City[] = [
   {
     name: "Dubai",
     country: "UAE",
-    tagline: "目标感强、上升快、资源密集、强烈的外向性",
+    tagline: "目标感强、上升快、资源密集、外向性强",
     description:
       "你的驱动力不需要外界来激活，你本来就很清楚自己要什么。这里给的是舞台，剩下的要靠你自己。",
     tags: { pace: 9, pressure: 8, social: 8, freedom: 5, stability: 7 },
@@ -634,33 +153,155 @@ const cities: City[] = [
 ];
 
 const questions: Question[] = [
-  { id: 1, text: "时间被安排得很满的时候，我通常不觉得累——反而有种充实感。", dimension: "pace" },
-  { id: 2, text: "我会自然地期待每天有很多事情发生。", dimension: "pace" },
-  { id: 3, text: "激烈的竞争环境不会让我崩溃，有时甚至让我兴奋。", dimension: "pressure" },
-  { id: 4, text: "高压力、高机会的生活，对我来说有吸引力，而不是负担。", dimension: "pressure" },
-  { id: 5, text: "在陌生人多的场合，我通常不难开口，甚至会主动找话题。", dimension: "social" },
-  { id: 6, text: "我需要生活里有足够多的人气和流动感，才不会觉得沉闷。", dimension: "social" },
-  { id: 7, text: "规则清晰、秩序井然的环境，会让我感到某种踏实。", dimension: "freedom", reverse: true },
-  { id: 8, text: "我更想要自由探索的空间，而不是现成的清晰路径。", dimension: "freedom" },
-  { id: 9, text: "稳定和可预期感，对我来说排在很高的位置。", dimension: "stability" },
-  { id: 10, text: "就算未来不确定，只要更有意思，我也愿意去试。", dimension: "stability", reverse: true },
-  { id: 11, text: "忙起来的时候，我会觉得自己真正在活着。", dimension: "pace" },
-  { id: 12, text: "比起安静，我更容易被有活力、有流动感的环境吸引。", dimension: "social" },
-  { id: 13, text: "我愿意选不太主流的生活方式，哪怕周围人不太理解。", dimension: "freedom" },
-  { id: 14, text: "生活状态经常在变，我可以适应，甚至有点享受。", dimension: "stability", reverse: true },
-  { id: 15, text: "被拿来比较、被评判，不会让我特别难受。", dimension: "pressure" },
-  { id: 16, text: "我能适应快节奏，而且有时候反而需要那种速度感。", dimension: "pace" },
-  { id: 17, text: "理想的周末里，有一定的社交和外出对我很重要。", dimension: "social" },
-  { id: 18, text: "生活太固定、太重复的时候，我会有一种说不清的压抑感。", dimension: "freedom" },
-  { id: 19, text: "比起更多的可能性，我更想要那种稳稳落地的安全感。", dimension: "stability" },
-  { id: 20, text: "我理想中的生活，更接近'慢慢展开'，而不是'一切都有安排'。", dimension: "freedom" },
-  { id: 21, text: "持续高度集中地工作，我不觉得很累——反而会进入一种状态。", dimension: "pressure" },
-  { id: 22, text: "一个城市的美感和文化氛围，会影响我是否想在那里生活。", dimension: "freedom" },
-  { id: 23, text: "我更喜欢城市里有熟悉的人、稳定的社群，而不是总在认识新朋友。", dimension: "social", reverse: true },
-  { id: 24, text: "生活里的不确定，有时候是一种活力的来源。", dimension: "stability", reverse: true },
+  {
+    id: 1,
+    text: "时间被安排得很满的时候，我通常不觉得累，反而有种充实感。",
+    dimension: "pace",
+  },
+  {
+    id: 2,
+    scene: "周一早上，你的日历已经排满了会议和截止日期。",
+    text: "看到这样的一周，我的第一反应是兴奋多过压力。",
+    dimension: "pace",
+  },
+  {
+    id: 3,
+    text: "激烈的竞争环境不会让我崩溃，有时甚至让我状态更好。",
+    dimension: "pressure",
+  },
+  {
+    id: 4,
+    scene: "你所在的行业竞争极其激烈，同龄人的进展随时可见。",
+    text: "这种氛围会推着我跑，而不是把我压垮。",
+    dimension: "pressure",
+  },
+  {
+    id: 5,
+    text: "在陌生人多的场合，我通常不难开口，甚至会主动找话题。",
+    dimension: "social",
+  },
+  {
+    id: 6,
+    scene: "你搬到了一座新城市，周围全是不认识的人。",
+    text: "我会比较快地开始认识新朋友，觉得这是件有意思的事。",
+    dimension: "social",
+  },
+  {
+    id: 7,
+    text: "规则清晰、秩序井然的环境，会让我感到踏实，而不是窒息。",
+    dimension: "freedom",
+    reverse: true,
+  },
+  {
+    id: 8,
+    scene: "公司提供了两种工作模式：一是有完整规范和流程，二是高度自主但结构模糊。",
+    text: "我会更倾向于选择高度自主的那种，哪怕结构不清晰。",
+    dimension: "freedom",
+  },
+  {
+    id: 9,
+    text: "稳定和可预期感，对我来说排在很高的位置。",
+    dimension: "stability",
+  },
+  {
+    id: 10,
+    scene: "有人给你一个机会：收入更高，但需要频繁搬城市，未来不确定。",
+    text: "这种不确定对我来说是代价，而不是吸引力。",
+    dimension: "stability",
+  },
+  {
+    id: 11,
+    text: "忙起来的时候，我会觉得自己真正在活着。",
+    dimension: "pace",
+  },
+  {
+    id: 12,
+    scene: "你有一个难得的空闲周末，什么安排都没有。",
+    text: "我多半会觉得有些无所适从，想找点事情做。",
+    dimension: "pace",
+  },
+  {
+    id: 13,
+    text: "我愿意选不太主流的生活方式，哪怕周围人不太理解。",
+    dimension: "freedom",
+  },
+  {
+    id: 14,
+    scene: "你的朋友都在走一条「正常」的路，而你在考虑一条很不一样的方向。",
+    text: "别人的困惑或质疑，不太会动摇我的判断。",
+    dimension: "freedom",
+  },
+  {
+    id: 15,
+    text: "被拿来比较、被评判，不会让我特别难受。",
+    dimension: "pressure",
+  },
+  {
+    id: 16,
+    scene: "你的工作成果会被定期排名，结果对所有人公开。",
+    text: "这种透明竞争不会让我特别抵触，甚至有点被激励到。",
+    dimension: "pressure",
+  },
+  {
+    id: 17,
+    text: "理想的周末里，有一定的社交和外出对我很重要。",
+    dimension: "social",
+  },
+  {
+    id: 18,
+    text: "生活太固定、太重复的时候，我会有一种说不清的压抑感。",
+    dimension: "freedom",
+  },
+  {
+    id: 19,
+    scene: "你正在为下一步做决定：一边是熟悉稳定的环境，一边是陌生但充满变数的新起点。",
+    text: "我会需要很强的理由，才愿意放弃那个稳定的选项。",
+    dimension: "stability",
+  },
+  {
+    id: 20,
+    text: "我理想中的生活，更接近「慢慢展开」，而不是「一切都有安排」。",
+    dimension: "freedom",
+  },
+  {
+    id: 21,
+    scene: "工作进入一个需要长时间高度专注的阶段，几乎没有社交空间。",
+    text: "我能进入那种状态，不觉得特别消耗，甚至享受这种沉浸感。",
+    dimension: "pressure",
+  },
+  {
+    id: 22,
+    text: "一个城市的美感和文化氛围，会真实影响我是否想在那里生活。",
+    dimension: "freedom",
+  },
+  {
+    id: 23,
+    scene: "你在一座陌生城市住了三个月，认识了一些新朋友，但关系还很浅。",
+    text: "这种状态会让我有点孤独，我更需要深度稳定的社交关系。",
+    dimension: "social",
+    reverse: true,
+  },
+  {
+    id: 24,
+    scene: "你的生活在过去半年里发生了很多变化，节奏和环境都不一样了。",
+    text: "这种持续的变化，对我来说是一种活力的来源，而不是消耗。",
+    dimension: "stability",
+    reverse: true,
+  },
+  {
+    id: 25,
+    text: "我能在快节奏里找到自己的位置，有时候那种速度感正是我需要的。",
+    dimension: "pace",
+  },
+  {
+    id: 26,
+    scene: "你有机会加入一个高速成长的团队，但每天都像在救火。",
+    text: "这样的环境听起来有挑战但也有意思，不会直接让我退缩。",
+    dimension: "pace",
+  },
 ];
 
-const options: Array<{ label: string; value: number }> = [
+const options = [
   { label: "完全不像我", value: 1 },
   { label: "不太像", value: 2 },
   { label: "说不准", value: 3 },
@@ -680,7 +321,7 @@ function toTenScale(avg: number): number {
   return Number((1 + ((avg - 1) / 4) * 9).toFixed(1));
 }
 
-function calculateProfile(answers: Answers): Profile {
+function calculateProfile(answers: Record<number, number>): Record<Dimension, number> {
   const grouped: Record<Dimension, number[]> = {
     pace: [],
     pressure: [],
@@ -688,49 +329,41 @@ function calculateProfile(answers: Answers): Profile {
     freedom: [],
     stability: [],
   };
-
   for (const q of questions) {
     const raw = answers[q.id];
     if (!raw) continue;
     const score = q.reverse ? 6 - raw : raw;
     grouped[q.dimension].push(score);
   }
-
-  const profile: Profile = {
+  const profile: Record<Dimension, number> = {
     pace: 5.5,
     pressure: 5.5,
     social: 5.5,
     freedom: 5.5,
     stability: 5.5,
   };
-
   (Object.keys(grouped) as Dimension[]).forEach((key) => {
     const arr = grouped[key];
     if (arr.length) {
-      const avg = arr.reduce((a: number, b: number) => a + b, 0) / arr.length;
+      const avg = arr.reduce((a, b) => a + b, 0) / arr.length;
       profile[key] = toTenScale(avg);
     }
   });
-
   return profile;
 }
 
-function getCityDistance(profile: Profile, city: City): number {
-  return (Object.keys(profile) as Dimension[]).reduce((sum: number, key: Dimension) => {
-    return sum + Math.abs(profile[key] - city.tags[key]);
-  }, 0);
+function getCityDistance(profile: Record<Dimension, number>, city: City): number {
+  return (Object.keys(profile) as Dimension[]).reduce(
+    (sum, key) => sum + Math.abs(profile[key] - city.tags[key]),
+    0
+  );
 }
 
-function getResults(profile: Profile): { top3: CityWithDistance[]; challenge: CityWithDistance } {
-  const ranked: CityWithDistance[] = cities
-    .map((city) => ({
-      ...city,
-      distance: getCityDistance(profile, city),
-    }))
+function getResults(profile: Record<Dimension, number>) {
+  const ranked = cities
+    .map((city) => ({ ...city, distance: getCityDistance(profile, city) }))
     .sort((a, b) => a.distance - b.distance);
-
   const top3 = ranked.slice(0, 3);
-
   const challenge =
     [...ranked]
       .sort((a, b) => {
@@ -743,19 +376,15 @@ function getResults(profile: Profile): { top3: CityWithDistance[]; challenge: Ci
         return fa - fb;
       })
       .reverse()
-      .find((city) => !top3.some((t) => t.name === city.name)) || ranked[ranked.length - 1];
-
+      .find((c) => !top3.some((t) => t.name === c.name)) || ranked[ranked.length - 1];
   return { top3, challenge };
 }
 
-function getProfileSummary(profile: Profile): string {
-  const highest = ([...Object.keys(profile)] as Dimension[]).sort(
-    (a, b) => profile[b] - profile[a]
-  )[0];
-  const lowest = ([...Object.keys(profile)] as Dimension[]).sort(
-    (a, b) => profile[a] - profile[b]
-  )[0];
-
+function getProfileSummary(profile: Record<Dimension, number>): string {
+  const keys = Object.keys(profile) as Dimension[];
+  const sorted = [...keys].sort((a, b) => profile[b] - profile[a]);
+  const highest = sorted[0];
+  const lowest = [...keys].sort((a, b) => profile[a] - profile[b])[0];
   const highText: Record<Dimension, string> = {
     pace: "你对有推进感、有流动性的生活有天然的适应力。",
     pressure: "你对竞争和上升空间有一定的耐受力，甚至需要它来维持状态。",
@@ -763,7 +392,6 @@ function getProfileSummary(profile: Profile): string {
     freedom: "你很看重个性空间，不太喜欢被框定得太死。",
     stability: "安全感和可预期性对你来说很重要，你需要稳固的地基。",
   };
-
   const lowText: Record<Dimension, string> = {
     pace: "被持续催赶的生活节奏，并不适合你。",
     pressure: "高压高卷的环境，会比较明显地消耗你。",
@@ -771,7 +399,6 @@ function getProfileSummary(profile: Profile): string {
     freedom: "你并不排斥清晰的规则和结构，有时反而需要它。",
     stability: "你对变化和不确定性的容纳度比较高。",
   };
-
   return `${highText[highest]} ${lowText[lowest]}`;
 }
 
@@ -779,33 +406,29 @@ function getMatchPercent(distance: number, floor = 72): number {
   return Math.max(floor, 100 - Math.round(distance * 2));
 }
 
-type CityWithDistance = City & { distance: number };
-
-export default function CityQuiz() {
+export default function CityQuizPage() {
   const [started, setStarted] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<Answers>({});
-  const [animating, setAnimating] = useState(false);
+  const [answers, setAnswers] = useState<Record<number, number>>({});
+  const [transitioning, setTransitioning] = useState(false);
 
   const currentQuestion = questions[currentIndex];
   const profile = useMemo(() => calculateProfile(answers), [answers]);
   const results = useMemo(() => getResults(profile), [profile]);
 
   const handleSelect = (value: number) => {
-    if (animating) return;
-
+    if (transitioning) return;
     setAnswers((prev) => ({ ...prev, [currentQuestion.id]: value }));
-    setAnimating(true);
-
+    setTransitioning(true);
     setTimeout(() => {
-      setAnimating(false);
+      setTransitioning(false);
       if (currentIndex < questions.length - 1) {
         setCurrentIndex((prev) => prev + 1);
       } else {
         setSubmitted(true);
       }
-    }, 220);
+    }, 240);
   };
 
   const resetAll = () => {
@@ -813,192 +436,179 @@ export default function CityQuiz() {
     setSubmitted(false);
     setCurrentIndex(0);
     setAnswers({});
-    setAnimating(false);
   };
 
   if (!started) {
     return (
-      <>
-        <style>{style}</style>
-        <div className="page" style={{ paddingTop: 60 }}>
-          <div className="container">
-            <div className="landing-wrap">
-              <div>
-                <span className="badge">城市气质测试</span>
-                <h1 className="landing-title serif">
-                  哪座城市，
-                  <br />
-                  <em>适合你生活？</em>
-                </h1>
-                <p className="landing-desc">
-                  通过一组关于节奏感、稳定性、社交偏好与自由空间的问题，
-                  找到与你内在气质更接近的城市。
-                </p>
-                <div className="btn-row">
-                  <button className="btn-primary" onClick={() => setStarted(true)}>
-                    开始测试
-                  </button>
-                  <div className="btn-ghost">{questions.length} 道题 · 约 3–4 分钟</div>
-                </div>
-              </div>
-
-              <div className="city-grid">
-                {cities.slice(0, 6).map((city) => (
-                  <div key={city.name} className="city-card-sm">
-                    <div className="city-name-sm">{city.name}</div>
-                    <div className="city-country-sm">{city.country}</div>
-                    <div className="city-tag-sm">{city.tagline}</div>
-                  </div>
-                ))}
-              </div>
+      <main className={styles.root}>
+        <div className={styles.landingWrap}>
+          <div className={styles.landingLeft}>
+            <span className={styles.badge}>城市气质测试</span>
+            <h1 className={styles.landingTitle}>
+              哪座城市，<br />
+              <em className={styles.titleEm}>适合你生活？</em>
+            </h1>
+            <p className={styles.landingDesc}>
+              通过一组关于节奏感、稳定性、社交偏好与自由空间的题目，
+              找到与你内在气质更接近的城市。
+            </p>
+            <div className={styles.btnRow}>
+              <button className={styles.btnPrimary} onClick={() => setStarted(true)}>
+                开始测试
+              </button>
+              <span className={styles.btnMeta}>{questions.length} 道题 · 约 4 分钟</span>
             </div>
           </div>
+          <div className={styles.cityGrid}>
+            {cities.slice(0, 6).map((city) => (
+              <div key={city.name} className={styles.cityCardSm}>
+                <div className={styles.cityNameSm}>{city.name}</div>
+                <div className={styles.cityCountrySm}>{city.country}</div>
+                <div className={styles.cityTagSm}>{city.tagline}</div>
+              </div>
+            ))}
+          </div>
         </div>
-      </>
+      </main>
     );
   }
 
   if (submitted) {
     const mainCity = results.top3[0];
-
     return (
-      <>
-        <style>{style}</style>
-        <div className="page">
-          <div className="container">
-            <div className="result-hero">
-              <div className="result-label">你的城市画像</div>
-              <div className="result-city serif">{mainCity.name}</div>
-              <div className="result-country">{mainCity.country}</div>
-              <p className="result-summary">{getProfileSummary(profile)}</p>
-              <div className="match-pill">匹配度 {getMatchPercent(mainCity.distance)}%</div>
+      <main className={styles.root}>
+        <div className={styles.resultWrap}>
+          <div className={styles.resultHero}>
+            <div className={styles.resultLabel}>你的城市画像</div>
+            <div className={styles.resultCity}>{mainCity.name}</div>
+            <div className={styles.resultCountry}>{mainCity.country}</div>
+            <p className={styles.resultSummary}>{getProfileSummary(profile)}</p>
+            <span className={styles.matchPill}>匹配度 {getMatchPercent(mainCity.distance)}%</span>
+          </div>
+
+          <div className={styles.resultGrid}>
+            <div className={styles.resultCard}>
+              <div className={styles.cardLabel}>为什么是这里</div>
+              <span className={styles.taglinePill}>{mainCity.tagline}</span>
+              <p className={styles.cityDesc}>{mainCity.description}</p>
             </div>
-
-            <div className="result-grid">
-              <div className="result-card">
-                <div className="result-card-title">为什么是这里</div>
-                <div className="tagline-pill">{mainCity.tagline}</div>
-                <p className="city-desc">{mainCity.description}</p>
-              </div>
-
-              <div className="result-card">
-                <div className="result-card-title">你的偏好画像</div>
+            <div className={styles.resultCard}>
+              <div className={styles.cardLabel}>你的偏好画像</div>
+              <div className={styles.dimList}>
                 {(Object.keys(profile) as Dimension[]).map((key) => (
-                  <div key={key} className="dimension-row">
-                    <div className="dim-label-row">
+                  <div key={key} className={styles.dimRow}>
+                    <div className={styles.dimLabelRow}>
                       <span>{dimensionLabels[key]}</span>
-                      <span className="dim-score">{profile[key]}</span>
+                      <span className={styles.dimScore}>{profile[key]}</span>
                     </div>
-                    <div className="dim-track">
-                      <div className="dim-fill" style={{ width: `${(profile[key] / 10) * 100}%` }} />
+                    <div className={styles.dimTrack}>
+                      <div
+                        className={styles.dimFill}
+                        style={{ width: `${(profile[key] / 10) * 100}%` }}
+                      />
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
-
-            <div className="section-row">
-              <div className="result-card">
-                <div className="result-card-title">也很适合你的地方</div>
-                {results.top3.slice(1).map((city) => (
-                  <div key={city.name} className="alt-city-item">
-                    <div>
-                      <div className="alt-city-name">{city.name}</div>
-                      <div className="alt-city-country">{city.country}</div>
-                      <div className="alt-city-tag">{city.tagline}</div>
-                    </div>
-                    <div className="alt-match">{getMatchPercent(city.distance, 68)}%</div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="result-card">
-                <div className="result-card-title">你可能向往，却未必适合的城市</div>
-                <div className="challenge-box">
-                  <div className="challenge-label">反差城市</div>
-                  <div className="challenge-name">{results.challenge.name}</div>
-                  <div className="challenge-country">{results.challenge.country}</div>
-                  <div className="challenge-tag">{results.challenge.tagline}</div>
-                  <p className="challenge-desc">{results.challenge.description}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bottom-row">
-              <button className="btn-primary" onClick={resetAll}>
-                重新测试
-              </button>
             </div>
           </div>
+
+          <div className={styles.sectionRow}>
+            <div className={styles.resultCard}>
+              <div className={styles.cardLabel}>也很适合你的地方</div>
+              {results.top3.slice(1).map((city) => (
+                <div key={city.name} className={styles.altCityItem}>
+                  <div>
+                    <div className={styles.altCityName}>{city.name}</div>
+                    <div className={styles.altCityCountry}>{city.country}</div>
+                    <div className={styles.altCityTag}>{city.tagline}</div>
+                  </div>
+                  <div className={styles.altMatch}>{getMatchPercent(city.distance, 68)}%</div>
+                </div>
+              ))}
+            </div>
+            <div className={styles.resultCard}>
+              <div className={styles.cardLabel}>你可能向往，却未必适合的城市</div>
+              <div className={styles.challengeBox}>
+                <div className={styles.challengeFlag}>反差城市</div>
+                <div className={styles.challengeName}>{results.challenge.name}</div>
+                <div className={styles.challengeCountry}>{results.challenge.country}</div>
+                <div className={styles.challengeTag}>{results.challenge.tagline}</div>
+                <p className={styles.challengeDesc}>{results.challenge.description}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.bottomRow}>
+            <button className={styles.btnPrimary} onClick={resetAll}>
+              重新测试
+            </button>
+          </div>
         </div>
-      </>
+      </main>
     );
   }
 
+  const pct = Math.round((currentIndex / questions.length) * 100);
+
   return (
-    <>
-      <style>{style}</style>
-      <div className="page">
-        <div className="container" style={{ maxWidth: 680 }}>
-          <div className="quiz-header">
-            <div>
-              <span className="badge">城市气质测试</span>
-              <div className="quiz-num" style={{ marginTop: 12 }}>
-                第 {currentIndex + 1} 题 / 共 {questions.length} 题
-              </div>
-            </div>
-            <div style={{ fontSize: 13, color: "var(--ink-4)", paddingTop: 8 }}>
-              {Math.round((currentIndex / questions.length) * 100)}%
-            </div>
+    <main className={styles.root}>
+      <div className={styles.quizWrap}>
+        <div className={styles.quizHeader}>
+          <span className={styles.badge}>城市气质测试</span>
+          <span className={styles.quizPct}>{pct}%</span>
+        </div>
+
+        <div className={styles.progressTrack}>
+          <div className={styles.progressFill} style={{ width: `${pct}%` }} />
+        </div>
+
+        <div
+          className={styles.questionCard}
+          style={{ opacity: transitioning ? 0 : 1, transition: "opacity 0.22s ease" }}
+        >
+          <div className={styles.questionMeta}>
+            第 {currentIndex + 1} / {questions.length} 题
           </div>
 
-          <div className="progress-track">
-            <div
-              className="progress-fill"
-              style={{ width: `${(currentIndex / questions.length) * 100}%` }}
-            />
-          </div>
+          {currentQuestion.scene && (
+            <div className={styles.scene}>{currentQuestion.scene}</div>
+          )}
 
-          <div
-            className="question-card"
-            style={{ opacity: animating ? 0.5 : 1, transition: "opacity 0.2s" }}
-          >
-            <p className="question-text">{currentQuestion.text}</p>
+          <p className={styles.questionText}>{currentQuestion.text}</p>
 
-            <div className="options-row">
-              {options.map((opt) => {
-                const active = answers[currentQuestion.id] === opt.value;
-
-                return (
-                  <button
-                    key={opt.value}
-                    className={`option-btn${active ? " active" : ""}`}
-                    onClick={() => handleSelect(opt.value)}
-                  >
-                    <div className="option-dots">
-                      {Array.from({ length: opt.value }).map((_, i) => (
-                        <div key={i} className="dot" />
-                      ))}
-                    </div>
-                    {opt.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="quiz-nav">
-            <button
-              className="btn-back"
-              onClick={() => currentIndex > 0 && setCurrentIndex((p) => p - 1)}
-              disabled={currentIndex === 0}
-            >
-              ← 上一题
-            </button>
-            <span className="hint-text">选择后自动进入下一题</span>
+          <div className={styles.optionsRow}>
+            {options.map((opt) => {
+              const active = answers[currentQuestion.id] === opt.value;
+              return (
+                <button
+                  key={opt.value}
+                  className={`${styles.optBtn} ${active ? styles.optBtnActive : ""}`}
+                  onClick={() => handleSelect(opt.value)}
+                >
+                  <span className={styles.optDots}>
+                    {Array.from({ length: opt.value }).map((_, i) => (
+                      <span key={i} className={styles.dot} />
+                    ))}
+                  </span>
+                  <span className={styles.optLabel}>{opt.label}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
+
+        <div className={styles.quizNav}>
+          <button
+            className={styles.btnBack}
+            onClick={() => currentIndex > 0 && setCurrentIndex((p) => p - 1)}
+            disabled={currentIndex === 0}
+          >
+            ← 上一题
+          </button>
+          <span className={styles.hintText}>选择后自动进入下一题</span>
+        </div>
       </div>
-    </>
+    </main>
   );
 }
