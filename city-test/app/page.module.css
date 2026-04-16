@@ -616,3 +616,44 @@
   display: flex;
   gap: 16px;
 }
+
+.cityGridWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.cityPager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pageBtn {
+  background: var(--white);
+  color: var(--navy);
+  border: 1px solid var(--sand3);
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: "DM Sans", sans-serif;
+  transition: all 0.2s ease;
+}
+
+.pageBtn:hover:not(:disabled) {
+  border-color: var(--terra);
+  color: var(--terra);
+  transform: translateY(-1px);
+}
+
+.pageBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.pageInfo {
+  font-size: 13px;
+  color: var(--ink4);
+}
