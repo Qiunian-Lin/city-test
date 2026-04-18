@@ -22,7 +22,7 @@ const QUESTIONS = [
       { text: "精细、仪式感极强，每道菜都是一次对食材的致敬", cities: ["tokyo", "kyoto", "paris", "zurich"] },
       { text: "热烈、辛辣、多元，街头小吃和市场才是灵魂所在", cities: ["istanbul", "mexico_city", "oaxaca", "bali"] },
       { text: "简单、新鲜、阳光充足，面包、橄榄油和海鲜就够了", cities: ["lisbon", "barcelona", "athens", "dubai"] },
-      { text: "前沿、跨界、实验性，米其林星和无国界料理才是追求", cities:["newyork", "london", "singapore", "seoul"] }
+      { text: "前沿、跨界、实验性，米其林星和无国界料理才是追求", cities: ["newyork", "london", "singapore", "seoul"] }
     ]
   },
   {
@@ -50,7 +50,7 @@ const QUESTIONS = [
   {
     id: 5,
     tag: "时间感知",
-    text: "你如何看待"效率"这件事？",
+    text: "你如何看待“效率”这件事？",
     options: [
       { text: "效率是一种美德，我厌恶浪费时间，凡事要做到最好最快", cities: ["tokyo", "singapore", "seoul", "zurich"] },
       { text: "节奏应该是有机的，急则急、慢则慢，顺其自然", cities: ["bali", "oaxaca", "lisbon", "athens"] },
@@ -149,7 +149,7 @@ const QUESTIONS = [
   {
     id: 14,
     tag: "孤独感",
-    text: "对于"孤独"，你的真实感受是？",
+    text: "对于“孤独”，你的真实感受是？",
     options: [
       { text: "孤独是我最喜欢的状态之一，是清醒与创造的温床", cities: ["reykjavik", "kyoto", "oslo", "paris"] },
       { text: "我需要孤独，但也需要被人群包围的时刻，两者缺一不可", cities: ["lisbon", "berlin", "tokyo", "athens"] },
@@ -160,7 +160,7 @@ const QUESTIONS = [
   {
     id: 15,
     tag: "身份认同",
-    text: "你如何定义"成功"？",
+    text: "你如何定义“成功”？",
     options: [
       { text: "财富与社会地位的可见证明，影响力与资源是成功的货币", cities: ["newyork", "dubai", "london", "singapore"] },
       { text: "深度的专业积累，成为某领域中不可替代的存在", cities: ["tokyo", "zurich", "oslo", "paris"] },
@@ -171,7 +171,7 @@ const QUESTIONS = [
   {
     id: 16,
     tag: "移动欲望",
-    text: "你对"根"的态度是？",
+    text: "你对“根”的态度是？",
     options: [
       { text: "需要根，一个固定的家给我安全感，从那里出发探索", cities: ["tokyo", "zurich", "oslo", "kyoto"] },
       { text: "浅根，随时可以移植，每次重新开始都很兴奋", cities: ["newyork", "singapore", "london", "dubai"] },
